@@ -1,7 +1,7 @@
 import logging
 
 
-def get_custom_logger(name: str, log_path: str, format: str):
+def get_custom_logger(name: str, log_path: str, format: str = None):
     if format:
         formatter = logging.Formatter(fmt=format)
     else:

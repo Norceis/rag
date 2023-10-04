@@ -26,8 +26,14 @@ def download_website(url: str, output_file: str, logger):
         logger.error(f"Request Exception: {err}")
 
 
-def download_rfc(rfc_number: int, logger):
-    rfc_name = f"rfc{rfc_number}.html"
+def download_rfc(rfc_number: int, logger, doc_format: str = "html"):
+    if doc_format == "html":
+        rfc_name = f"rfc{rfc_number}.html"
+    elif doc_format == "txt":
+        rfc_name = f"rfc{rfc_number}.txt"
+    else:
+        raise TypeError('Please specify correct format to download (html or txt)')
+
     rfc_url = BASE_RFC_URL + rfc_name
-    output_file = RAW_PATH_DATASET / rfc_name
+    output_file = RAW_PATH_DATASET / doc_format / rfc_name
     download_website(rfc_url, output_file, logger)
