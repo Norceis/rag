@@ -3,3 +3,5 @@ tqdm==4.66.1
 black==23.9.1
 unstructured==0.10.18
 langchain==0.0.308
+streamlit==1.27.2
+st_pages==0.4.5
