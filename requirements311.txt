@@ -1,3 +1,4 @@
+# python==3.11
 jupyter==1.0.0
 tqdm==4.66.1
 black==23.9.1
@@ -5,3 +6,6 @@ unstructured==0.10.18
 langchain==0.0.308
 streamlit==1.27.2
 st_pages==0.4.5
+llama-cpp-python==0.2.11
+gpt4all==2.0.0
+pinecone-client==2.2.4
