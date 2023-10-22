@@ -6,13 +6,16 @@ from bs4 import BeautifulSoup
 from langchain.document_loaders import TextLoader, UnstructuredHTMLLoader
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from tqdm import tqdm
 
 from dataset.allowed_types import ALLOWED_CATEGORIES
 from dataset.regexes import *
 
-SPLIT_DATASET_DIR = Path('data/split_dataset/3')
+SPLIT_DATASET_DIR = Path("data/split_dataset/3")
 CHUNK_SIZE = 2500
 CHUNK_OVERLAP = 250
+
+
 def get_title_from_html_file(path: Path):
     with path.open("r", encoding="utf-8") as file:
         html_content = file.read()
@@ -198,6 +201,9 @@ def split_document(documents: list[Document]):
 
 
 def preprocess_and_save_html_file(path: Path):
+    if not SPLIT_DATASET_DIR.exists():
+        SPLIT_DATASET_DIR.mkdir(parents=True)
+
     save_path = SPLIT_DATASET_DIR / f"{path.name[:-5]}.json"
 
     if save_path.exists():
@@ -213,6 +219,24 @@ def save_docs_to_json(list_of_docs: list, file_path: str) -> None:
         for doc in list_of_docs:
             json.dump(doc.json(), json_file)
             json_file.write("\n")
+
+
+def read_docs_from_json(file_path: str) -> list:
+    array = []
+    with open(file_path, "r") as jsonl_file:
+        for line in jsonl_file:
+            data = json.loads(line)
+            data_data = json.loads(data)
+            obj = Document(**data_data)
+            array.append(obj)
+    return array
+
+
+def load_all_documents(path: Path):
+    splitted_documents = []
+    for file_path in tqdm(path.glob("*.json"), desc="Processing RFCs", unit="file"):
+        splitted_documents.extend(read_docs_from_json(file_path))
+    return splitted_documents
 
 
 # parse_file(Path("data/raw_dataset/html/rfc2046.html"))
