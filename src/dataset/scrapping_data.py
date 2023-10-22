@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from dataset.utils import download_rfc
+from dataset.scrapping_data_utils import download_rfc
 import concurrent.futures
 from loggers.loggers import get_custom_logger
 
