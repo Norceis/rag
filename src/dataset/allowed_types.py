@@ -1,9 +1,8 @@
 ALLOWED_CATEGORIES = [
-    'Standards Track',
-    'Standard Track',
-    'Informational',
-    'Experimental',
-    'Best Current Practice',
-    'Historic',
+    "Standards Track",
+    "Standard Track",
+    "Informational",
+    "Experimental",
+    "Best Current Practice",
+    "Historic",
 ]
-

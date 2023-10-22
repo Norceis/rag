@@ -8,7 +8,7 @@ def get_custom_logger(name: str, log_path: str, format: str = None):
         formatter = logging.Formatter(
             fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
-    handler = logging.FileHandler(log_path, encoding='utf-8')
+    handler = logging.FileHandler(log_path, encoding="utf-8")
     handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)
