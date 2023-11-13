@@ -13,9 +13,9 @@ from dataset.allowed_types import ALLOWED_CATEGORIES
 from dataset.regexes import *
 
 CLEAN_DATASET_DIR = Path("data/clean_dataset/html")
-SPLIT_DATASET_DIR = Path("data/split_dataset/6")
-CHUNK_SIZE = 250
-CHUNK_OVERLAP = 25
+SPLIT_DATASET_DIR = Path("data/split_dataset/500_50")
+CHUNK_SIZE = 500
+CHUNK_OVERLAP = 50
 
 
 def get_title_from_html_file(path: Path):
@@ -188,7 +188,7 @@ def load_raw_text_with_soup(path: Path):
     return soup.get_text()
 
 
-def parse_html_file(path: Path):
+def parse_html_file(path: Path) -> Document:
     content = load_raw_text_with_soup(path)
     metadata = get_full_metadata_from_html_file(path)
     return Document(page_content=content, metadata=metadata)
@@ -202,7 +202,7 @@ def split_document(documents: list[Document]):
     return splitted_docs
 
 
-def preprocess_and_save_html_file(path: Path):
+def preprocess_and_save_html_file(path: Path) -> None:
     if not SPLIT_DATASET_DIR.exists():
         SPLIT_DATASET_DIR.mkdir(parents=True)
 
