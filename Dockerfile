@@ -26,7 +26,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8888
 
 # Command to run on container start
-#CMD [ "streamlit", "run", "src/app/main.py", "--server.port=8888", "--server.address=0.0.0.0"]
+CMD cd src/app && streamlit run main.py --server.port=8888 --server.address=0.0.0.0
+
 
 #cd src/app; streamlit run main.py --server.port=8888 --server.address=0.0.0.0
 #jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
