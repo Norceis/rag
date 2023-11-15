@@ -30,8 +30,8 @@ if "memory" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-llm = load_llm()
-db = load_db()
+llm = load_llm('orca')
+db = load_db(store_name='faiss', db_name='local_500')
 
 chat_pipeline = get_retrieval_chat_pipeline(
     llm,

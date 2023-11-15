@@ -1,0 +1,22 @@
+# python==3.9
+
+jupyter==1.0.0
+tqdm==4.66.1
+black==23.9.1
+streamlit==1.27.2
+st_pages==0.4.5
+llama-cpp-python==0.2.11
+faiss-cpu==1.7.4
+gpt4all==2.0.0
+pinecone-client==2.2.2
+sentence-transformers==2.2.2
+transformers==4.31.0
+datasets==2.14.0
+accelerate==0.21.0
+einops==0.6.1
+langchain==0.0.240
+xformers==0.0.20
+bitsandbytes==0.41.0
+python-dotenv==1.0.0
+openai==0.28.1
+tiktoken==0.5.1
