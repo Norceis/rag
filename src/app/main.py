@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain.memory import ConversationBufferMemory
 
 from utils.cached_funcs import load_llm, load_db
-from utils.formatting import format_as_table, format_document_name
+from utils.formatting import format_as_table, format_document_name, markdown_justified
 from utils.pipelines import get_retrieval_chat_pipeline
 
 load_dotenv()
@@ -22,6 +22,13 @@ with col:
             memory_key="chat_history", return_messages=True, output_key="answer"
         )
 
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": "Hello, how can I help you?",
+            }
+        )
+
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(
         memory_key="chat_history", return_messages=True, output_key="answer"
@@ -29,9 +36,15 @@ if "memory" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": "Hello, how can I help you?",
+        }
+    )
 
-llm = load_llm('orca')
-db = load_db(store_name='faiss', db_name='local_500')
+llm = load_llm("orca")
+db = load_db(store_name="faiss", db_name="local_500")
 
 chat_pipeline = get_retrieval_chat_pipeline(
     llm,
@@ -46,11 +59,11 @@ if "messages" in st.session_state:
         try:
             source_docs_table = format_as_table(message, message_type=True)
             with st.chat_message(message["role"]):
-                st.markdown(f'{message["content"]}')
+                markdown_justified(message['content'])
                 st.dataframe(source_docs_table, hide_index=True)
         except KeyError:
             with st.chat_message(message["role"]):
-                st.markdown(f'{message["content"]}')
+                markdown_justified(message['content'])
 
 # React to user input
 user_input = st.chat_input("What do you want to know?")
@@ -62,12 +75,15 @@ if user_input:
     st.chat_message("user").markdown(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    response = chat_pipeline(user_input)
+    response = dict()
+    response["answer"] = ""
+    while not response["answer"]:
+        response = chat_pipeline(user_input)
 
     answer = response["answer"]
     source_docs_table = format_as_table(response, message_type=False)
     with st.chat_message("assistant"):
-        st.markdown(answer)
+        markdown_justified(answer)
         st.dataframe(source_docs_table, hide_index=True)
 
     st.session_state.messages.append(
