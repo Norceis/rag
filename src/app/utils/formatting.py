@@ -1,3 +1,4 @@
+import copy
 from pathlib import Path
 import pandas as pd
 import streamlit as st
@@ -19,6 +20,18 @@ def format_as_table(response, message_type: bool = True):
             ]
         ]
     return table
+
+
+def display_clickable_table(set_of_docs: set):
+    df = pd.DataFrame(columns=["Source documents"])
+
+    for doc_name in set_of_docs:
+        url = f"https://www.rfc-editor.org/rfc/{doc_name}.html"
+        new_row_data = {
+            "Source documents": f'<a target="_blank" href="{url}">{doc_name}</a>'
+        }
+        df.loc[len(df)] = new_row_data
+    return st.write(df.to_html(escape=False), unsafe_allow_html=True)
 
 
 def markdown_justified(text):

@@ -2,8 +2,12 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain.memory import ConversationBufferMemory
 
-from utils.cached_funcs import load_llm, load_db
-from utils.formatting import format_as_table, format_document_name, markdown_justified
+from utils.streamlit_functions import load_llm, load_db, display_sidebar_with_links
+from utils.formatting import (
+    format_as_table,
+    format_document_name,
+    markdown_justified,
+)
 from utils.pipelines import get_retrieval_chat_pipeline
 
 load_dotenv()
@@ -13,21 +17,6 @@ st.markdown(
     "<h3 style='text-align: center; color: white;'>RFC Assistant</h3>",
     unsafe_allow_html=True,
 )
-
-_, _, _, col, _, _, _ = st.columns(7)
-with col:
-    if st.button("Reset"):
-        st.session_state.messages = []
-        st.session_state.memory = ConversationBufferMemory(
-            memory_key="chat_history", return_messages=True, output_key="answer"
-        )
-
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": "Hello, how can I help you?",
-            }
-        )
 
 if "memory" not in st.session_state:
     st.session_state.memory = ConversationBufferMemory(
@@ -46,6 +35,21 @@ if "messages" not in st.session_state:
 llm = load_llm("orca")
 db = load_db(store_name="faiss", db_name="local_500")
 
+_, _, _, col, _, _, _ = st.columns(7)
+with col:
+    if st.button("Reset"):
+        st.session_state.messages = []
+        st.session_state.memory = ConversationBufferMemory(
+            memory_key="chat_history", return_messages=True, output_key="answer"
+        )
+
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": "Hello, how can I help you?",
+            }
+        )
+
 chat_pipeline = get_retrieval_chat_pipeline(
     llm,
     db,
@@ -53,19 +57,18 @@ chat_pipeline = get_retrieval_chat_pipeline(
     3,
 )
 
-# Display chat messages from history on app rerun
 if "messages" in st.session_state:
     for message in st.session_state.messages:
         try:
             source_docs_table = format_as_table(message, message_type=True)
             with st.chat_message(message["role"]):
-                markdown_justified(message['content'])
+                markdown_justified(message["content"])
                 st.dataframe(source_docs_table, hide_index=True)
         except KeyError:
             with st.chat_message(message["role"]):
-                markdown_justified(message['content'])
+                markdown_justified(message["content"])
 
-# React to user input
+
 user_input = st.chat_input("What do you want to know?")
 if user_input:
     st.session_state.chat_feedback = ""
@@ -85,7 +88,6 @@ if user_input:
     with st.chat_message("assistant"):
         markdown_justified(answer)
         st.dataframe(source_docs_table, hide_index=True)
-
     st.session_state.messages.append(
         {
             "role": "assistant",
@@ -98,3 +100,6 @@ if user_input:
     )
     st.session_state.chat_result = response
     st.session_state.chat_input = user_input
+
+
+display_sidebar_with_links()

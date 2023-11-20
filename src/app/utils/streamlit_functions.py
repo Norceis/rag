@@ -10,6 +10,8 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.llms import LlamaCpp
 from langchain.embeddings import HuggingFaceEmbeddings
 
+from utils.formatting import display_clickable_table
+
 
 @st.cache_resource
 def load_llm(llm_name: str = "openai_1000"):
@@ -36,7 +38,7 @@ def load_local_llm(local_llm_name: str):
         model_path=model_path,
         n_gpu_layers=40,
         n_batch=256,
-        n_ctx=2048,
+        n_ctx=8096,
         f16_kv=True,
         callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
         verbose=True,
@@ -83,3 +85,17 @@ def load_faiss(db_name: str = "local_500"):
         raise NotImplementedError
 
     return FAISS.load_local(str(faiss_local_path), embed_model)
+
+
+def display_sidebar_with_links():
+    with st.sidebar:
+        set_of_docs = set()
+        for message in st.session_state.messages:
+            try:
+                for source in message["source_names"]:
+                    set_of_docs.add(source)
+            except KeyError:
+                pass
+
+        if set_of_docs:
+            display_clickable_table(set_of_docs)
