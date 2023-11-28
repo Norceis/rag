@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+
+import pandas as pd
 from torch import cuda
 import streamlit as st
 from langchain.callbacks import StreamingStdOutCallbackHandler
@@ -10,12 +12,12 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.llms import LlamaCpp
 from langchain.embeddings import HuggingFaceEmbeddings
 
-from utils.formatting import display_clickable_table
+from utils.formatting import display_clickable_table, display_clickable_text
 
 
 @st.cache_resource
-def load_llm(llm_name: str = "openai_1000"):
-    if llm_name == "openai_1000":
+def load_llm(llm_name: str = "openai"):
+    if llm_name == "openai":
         return OpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
     elif llm_name == "orca":
         return load_local_llm("orca")
@@ -81,6 +83,8 @@ def load_faiss(db_name: str = "local_500"):
         )
     elif db_name == "local_250":
         embed_model = get_local_embeddings("sentence-transformers/all-MiniLM-L6-v2")
+    elif db_name == "openai_1500":
+        embed_model = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
     else:
         raise NotImplementedError
 
@@ -99,3 +103,9 @@ def display_sidebar_with_links():
 
         if set_of_docs:
             display_clickable_table(set_of_docs)
+
+
+def display_text_with_links(docs_table: pd.DataFrame):
+    set_of_docs = set(docs_table.iloc[0, 0])
+    if set_of_docs:
+        display_clickable_text(set_of_docs)

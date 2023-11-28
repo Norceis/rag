@@ -2,7 +2,11 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain.memory import ConversationBufferMemory
 
-from utils.streamlit_functions import load_llm, load_db, display_sidebar_with_links
+from utils.streamlit_functions import (
+    load_llm,
+    load_db,
+    display_text_with_links,
+)
 from utils.formatting import (
     format_as_table,
     format_document_name,
@@ -32,8 +36,8 @@ if "messages" not in st.session_state:
         }
     )
 
-llm = load_llm("orca")
-db = load_db(store_name="faiss", db_name="local_500")
+llm = load_llm("openai")
+db = load_db(store_name="faiss", db_name="openai_1500")
 
 _, _, _, col, _, _, _ = st.columns(7)
 with col:
@@ -63,7 +67,7 @@ if "messages" in st.session_state:
             source_docs_table = format_as_table(message, message_type=True)
             with st.chat_message(message["role"]):
                 markdown_justified(message["content"])
-                st.dataframe(source_docs_table, hide_index=True)
+                display_text_with_links(source_docs_table)
         except KeyError:
             with st.chat_message(message["role"]):
                 markdown_justified(message["content"])
@@ -87,7 +91,7 @@ if user_input:
     source_docs_table = format_as_table(response, message_type=False)
     with st.chat_message("assistant"):
         markdown_justified(answer)
-        st.dataframe(source_docs_table, hide_index=True)
+        display_text_with_links(source_docs_table)
     st.session_state.messages.append(
         {
             "role": "assistant",
@@ -100,6 +104,3 @@ if user_input:
     )
     st.session_state.chat_result = response
     st.session_state.chat_input = user_input
-
-
-display_sidebar_with_links()
