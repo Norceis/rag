@@ -15,31 +15,30 @@ from langchain.embeddings import HuggingFaceEmbeddings
 
 from utils.formatting import display_clickable_table, display_clickable_text
 
+AVAILABLE_LLMS = [
+    "llama-2-70b-chat.Q4_K_M.gguf",
+    "mistral-7b-openorca.Q4_0.gguf",
+    "nous-hermes-llama2-13b.Q4_0.gguf",
+]
+
 
 @st.cache_resource
-def load_llm(llm_name: str = "openai"):
+def load_llm(llm_name: str = "openai", n_gpu_layers: int = 100):
     if llm_name == "openai":
         return OpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
-    elif llm_name == "orca":
-        return load_local_llm("orca")
-    elif llm_name == "llama2":
-        return load_local_llm("llama2")
+    elif llm_name in AVAILABLE_LLMS:
+        return load_local_llm(llm_name, n_gpu_layers)
     else:
         raise NotImplementedError
 
 
 @st.cache_resource
-def load_local_llm(local_llm_name: str):
-    if local_llm_name == "orca":
-        model_path = "../../models/mistral-7b-openorca.Q4_0.gguf"
-    elif local_llm_name == "llama2":
-        model_path = "../../models/nous-hermes-llama2-13b.Q4_0.gguf"
-    else:
-        raise NotImplementedError
+def load_local_llm(local_llm_name: str = 'mistral-7b-openorca.Q4_0.gguf', n_gpu_layers: int = 100):
+    model_path = "../../models/" + local_llm_name
 
     llm = LlamaCpp(
         model_path=model_path,
-        n_gpu_layers=40,
+        n_gpu_layers=n_gpu_layers,
         n_batch=256,
         n_ctx=8096,
         f16_kv=True,
@@ -76,7 +75,7 @@ def load_db(store_name: str = "faiss", db_name: str = "local_500"):
 def load_faiss(db_name: str = "local_500"):
     faiss_local_path = Path(f"../../data/embedded_dataset/faiss/{db_name}/faiss_idx")
 
-    if db_name == "openai_1000":
+    if 'openai' in db_name:
         embed_model = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
     elif db_name == "local_500":
         embed_model = get_local_embeddings(
@@ -84,8 +83,6 @@ def load_faiss(db_name: str = "local_500"):
         )
     elif db_name == "local_250":
         embed_model = get_local_embeddings("sentence-transformers/all-MiniLM-L6-v2")
-    elif db_name == "openai_1500":
-        embed_model = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
     else:
         raise NotImplementedError
 

@@ -19,8 +19,6 @@ EXPOSE 8888
 
 CMD cd src/app && streamlit run main.py --server.port=8888 --server.address=0.0.0.0
 
-
-#cd src/app; streamlit run main.py --server.port=8888 --server.address=0.0.0.0
 #jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
 #docker run `
 #  -v C:\Users\cubix\PycharmProjects\rag\data:/app/data `

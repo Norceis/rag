@@ -30,7 +30,7 @@ if not st.session_state.input_password:
     password = st.text_input("Enter password:", key="user_input_password")
     authorize_user(password)
 else:
-    llm = load_llm("openai")
+    llm = load_llm(llm_name="llama-2-70b-chat.Q4_K_M.gguf", n_gpu_layers=100)
     db = load_db(store_name="faiss", db_name="openai_1500")
 
     _, _, _, col, _, _, _ = st.columns(7)
