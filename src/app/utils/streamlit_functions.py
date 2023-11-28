@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
+from langchain.memory import ConversationBufferMemory
 from torch import cuda
 import streamlit as st
 from langchain.callbacks import StreamingStdOutCallbackHandler
@@ -109,3 +110,30 @@ def display_text_with_links(docs_table: pd.DataFrame):
     set_of_docs = set(docs_table.iloc[0, 0])
     if set_of_docs:
         display_clickable_text(set_of_docs)
+
+
+def initialize_session_state_variables():
+    if "memory" not in st.session_state:
+        st.session_state.memory = ConversationBufferMemory(
+            memory_key="chat_history", return_messages=True, output_key="answer"
+        )
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": "Hello, how can I help you?",
+            }
+        )
+
+    if "input_password" not in st.session_state:
+        st.session_state.input_password = ""
+
+
+def authorize_user(password: str):
+    if password == "rag-test-1337":
+        st.session_state.input_password = password
+        st.rerun()
+    elif password:
+        st.markdown("Password incorrect")
