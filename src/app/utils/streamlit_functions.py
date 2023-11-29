@@ -15,32 +15,35 @@ from langchain.embeddings import HuggingFaceEmbeddings
 
 from utils.formatting import display_clickable_table, display_clickable_text
 
-AVAILABLE_LLMS = [
-    "llama-2-70b-chat.Q4_K_M.gguf",
-    "mistral-7b-openorca.Q4_0.gguf",
-    "nous-hermes-llama2-13b.Q4_0.gguf",
-]
+
+def get_available_llms():
+    directory_path = Path("../../models")
+    files = directory_path.glob(f"*.gguf")
+    file_names = [str(file.name) for file in files]
+    return file_names
 
 
 @st.cache_resource
-def load_llm(llm_name: str = "openai", n_gpu_layers: int = 100):
+def load_llm(llm_name: str = "openai", n_gpu_layers: int = 100, context_len: int = 8192):
     if llm_name == "openai":
         return OpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
-    elif llm_name in AVAILABLE_LLMS:
-        return load_local_llm(llm_name, n_gpu_layers)
+    elif llm_name in get_available_llms():
+        return load_local_llm(llm_name=llm_name, n_gpu_layers=n_gpu_layers, context_len=context_len)
     else:
         raise NotImplementedError
 
 
 @st.cache_resource
-def load_local_llm(local_llm_name: str = 'mistral-7b-openorca.Q4_0.gguf', n_gpu_layers: int = 100):
+def load_local_llm(
+    local_llm_name: str = "mistral-7b-openorca.Q4_0.gguf", n_gpu_layers: int = 100, context_len: int = 8192
+):
     model_path = "../../models/" + local_llm_name
 
     llm = LlamaCpp(
         model_path=model_path,
         n_gpu_layers=n_gpu_layers,
         n_batch=256,
-        n_ctx=8096,
+        n_ctx=context_len,
         f16_kv=True,
         callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
         verbose=True,
@@ -75,7 +78,7 @@ def load_db(store_name: str = "faiss", db_name: str = "local_500"):
 def load_faiss(db_name: str = "local_500"):
     faiss_local_path = Path(f"../../data/embedded_dataset/faiss/{db_name}/faiss_idx")
 
-    if 'openai' in db_name:
+    if "openai" in db_name:
         embed_model = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
     elif db_name == "local_500":
         embed_model = get_local_embeddings(

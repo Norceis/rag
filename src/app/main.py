@@ -16,6 +16,12 @@ from utils.formatting import (
 )
 from utils.pipelines import get_retrieval_chat_pipeline
 
+NUMBER_OF_SS_DOCS_RETURNED = 5
+CONTEXT_LEN_OF_LLM = 16000
+LLM_NAME = "llama-2-70b-chat.Q4_K_M.gguf"
+N_GPU_LAYERS = 100
+DB_NAME = 'openai_1500'
+
 load_dotenv()
 st.set_page_config(page_title="Chat", page_icon="🗣️", layout="centered")
 
@@ -30,8 +36,8 @@ if not st.session_state.input_password:
     password = st.text_input("Enter password:", key="user_input_password")
     authorize_user(password)
 else:
-    llm = load_llm(llm_name="llama-2-70b-chat.Q4_K_M.gguf", n_gpu_layers=100)
-    db = load_db(store_name="faiss", db_name="openai_1500")
+    llm = load_llm(llm_name=LLM_NAME, n_gpu_layers=N_GPU_LAYERS, context_len=CONTEXT_LEN_OF_LLM)
+    db = load_db(store_name="faiss", db_name=DB_NAME)
 
     _, _, _, col, _, _, _ = st.columns(7)
     with col:
@@ -52,7 +58,7 @@ else:
         llm,
         db,
         st.session_state.memory,
-        3,
+        n_documents=NUMBER_OF_SS_DOCS_RETURNED,
     )
 
     if "messages" in st.session_state:
