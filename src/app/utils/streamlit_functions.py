@@ -28,7 +28,7 @@ def load_llm(llm_name: str = "openai", n_gpu_layers: int = 100, context_len: int
     if llm_name == "openai":
         return OpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
     elif llm_name in get_available_llms():
-        return load_local_llm(llm_name=llm_name, n_gpu_layers=n_gpu_layers, context_len=context_len)
+        return load_local_llm(local_llm_name=llm_name, n_gpu_layers=n_gpu_layers, context_len=context_len)
     else:
         raise NotImplementedError
 
