@@ -20,3 +20,5 @@ bitsandbytes==0.41.0
 python-dotenv==1.0.0
 openai==0.28.1
 tiktoken==0.5.1
+sentencepiece==0.1.98
+gguf>=0.1.0

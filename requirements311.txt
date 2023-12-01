@@ -9,3 +9,5 @@ st_pages==0.4.5
 llama-cpp-python==0.2.11
 gpt4all==2.0.0
 pinecone-client==2.2.4
+sentencepiece==0.1.98
+gguf>=0.1.0
