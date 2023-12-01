@@ -16,26 +16,35 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from utils.formatting import display_clickable_table, display_clickable_text
 
 
-def get_available_llms():
-    directory_path = Path("../../models")
-    files = directory_path.glob(f"*.gguf")
+def get_available_llms(path: Path):
+    files = path.glob(f"*.gguf")
     file_names = [str(file.name) for file in files]
     return file_names
 
 
+def get_available_dbs(path: Path):
+    return [entry.name for entry in path.iterdir() if entry.is_dir()]
+
+
 @st.cache_resource
-def load_llm(llm_name: str = "openai", n_gpu_layers: int = 100, context_len: int = 8192):
+def load_llm(
+    llm_name: str = "openai", n_gpu_layers: int = 100, context_len: int = 8192
+):
     if llm_name == "openai":
         return OpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"))
-    elif llm_name in get_available_llms():
-        return load_local_llm(local_llm_name=llm_name, n_gpu_layers=n_gpu_layers, context_len=context_len)
+    elif llm_name in get_available_llms(Path("../../models")):
+        return load_local_llm(
+            local_llm_name=llm_name, n_gpu_layers=n_gpu_layers, context_len=context_len
+        )
     else:
         raise NotImplementedError
 
 
 @st.cache_resource
 def load_local_llm(
-    local_llm_name: str = "mistral-7b-openorca.Q4_0.gguf", n_gpu_layers: int = 100, context_len: int = 8192
+    local_llm_name: str = "mistral-7b-openorca.Q4_0.gguf",
+    n_gpu_layers: int = 100,
+    context_len: int = 8192,
 ):
     model_path = "../../models/" + local_llm_name
 
@@ -130,10 +139,18 @@ def initialize_session_state_variables():
     if "input_password" not in st.session_state:
         st.session_state.input_password = ""
 
+    if 'number_of_ss_docs_returned' not in st.session_state:
+        st.session_state.number_of_ss_docs_returned = 3
 
-def authorize_user(password: str):
-    if password == "rag-test-1337":
-        st.session_state.input_password = password
-        st.rerun()
-    elif password:
-        st.markdown("Password incorrect")
+    if 'context_len_of_llm' not in st.session_state:
+        st.session_state.context_len_of_llm = 8192
+
+    if 'n_gpu_layers' not in st.session_state:
+        st.session_state.n_gpu_layers = 40
+
+    if 'llm_name' not in st.session_state:
+        st.session_state.llm_name = None
+
+    if 'db_name' not in st.session_state:
+        st.session_state.db_name = None
+
