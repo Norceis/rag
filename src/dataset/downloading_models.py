@@ -2,6 +2,7 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 import subprocess
+import shutil
 
 # IMPORTANT: Run this script from rag dir
 
@@ -19,7 +20,7 @@ gguf_model_ids = {
 
 def delete_dir(path: Path):
     try:
-        path.rmdir()
+        shutil.rmtree(path)
         print(f"Directory '{path}' deleted successfully.")
     except OSError as e:
         print(f"Error: {e}")
@@ -34,6 +35,7 @@ def download_hf_repos(repo_model_ids: dict):
             revision="main",
         )
         command = f"python src/dataset/convert-hf-to-gguf.py models/{model_author}-{model_name} --outfile models/{model_author}-{model_name}.gguf --outtype q8_0"
+
         subprocess.call(command, shell=True)
         delete_dir(Path(f"models/{model_author}-{model_name}"))
 
