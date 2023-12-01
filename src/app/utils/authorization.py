@@ -35,7 +35,7 @@ def authorize_user(password: str):
             db_name = st.radio(
                 "Choose DB",
                 dbs,
-                index=len(llms) - 1,
+                index=len(dbs) - 1,
             )
 
             if st.button("Confirm choices"):
