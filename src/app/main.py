@@ -33,7 +33,9 @@ if not st.session_state.input_password:
 else:
     if st.session_state.llm_name:
         llm = load_llm(
-            llm_name=st.session_state.llm_name, n_gpu_layers=st.session_state.n_gpu_layers, context_len=st.session_state.context_len_of_llm
+            llm_name=st.session_state.llm_name,
+            n_gpu_layers=st.session_state.n_gpu_layers,
+            context_len=st.session_state.context_len_of_llm,
         )
         db = load_db(store_name="faiss", db_name=st.session_state.db_name)
 

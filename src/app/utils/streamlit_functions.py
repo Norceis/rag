@@ -139,18 +139,17 @@ def initialize_session_state_variables():
     if "input_password" not in st.session_state:
         st.session_state.input_password = ""
 
-    if 'number_of_ss_docs_returned' not in st.session_state:
+    if "number_of_ss_docs_returned" not in st.session_state:
         st.session_state.number_of_ss_docs_returned = 3
 
-    if 'context_len_of_llm' not in st.session_state:
+    if "context_len_of_llm" not in st.session_state:
         st.session_state.context_len_of_llm = 8192
 
-    if 'n_gpu_layers' not in st.session_state:
+    if "n_gpu_layers" not in st.session_state:
         st.session_state.n_gpu_layers = 40
 
-    if 'llm_name' not in st.session_state:
+    if "llm_name" not in st.session_state:
         st.session_state.llm_name = None
 
-    if 'db_name' not in st.session_state:
+    if "db_name" not in st.session_state:
         st.session_state.db_name = None
-
