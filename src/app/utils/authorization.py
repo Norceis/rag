@@ -53,16 +53,22 @@ def authorize_user(password: str):
             st.rerun()
         case "rag-test-7555":  # GROUP 2
             st.session_state.input_password = password
+            st.session_state.number_of_ss_docs_returned = 7
             st.session_state.llm_name = "openai"
             st.session_state.db_name = "local_500"
             st.rerun()
         case "rag-test-9952":  # GROUP 3
             st.session_state.input_password = password
+            st.session_state.context_len_of_llm = 8192
+            st.session_state.n_gpu_layers = 43
             st.session_state.llm_name = "nous-hermes-llama2-13b.Q4_0.gguf"
             st.session_state.db_name = "openai_1500"
             st.rerun()
         case "rag-test-9632":  # GROUP 4
             st.session_state.input_password = password
+            st.session_state.number_of_ss_docs_returned = 7
+            st.session_state.context_len_of_llm = 8192
+            st.session_state.n_gpu_layers = 43
             st.session_state.llm_name = "nous-hermes-llama2-13b.Q4_0.gguf"
             st.session_state.db_name = "local_500"
             st.rerun()
