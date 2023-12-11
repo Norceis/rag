@@ -1,4 +1,4 @@
-# python==3.9
+# python==3.10
 
 jupyter==1.0.0
 tqdm==4.66.1
@@ -22,3 +22,4 @@ openai==0.28.1
 tiktoken==0.5.1
 sentencepiece==0.1.98
 gguf>=0.1.0
+tvalmetrics
