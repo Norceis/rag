@@ -19,8 +19,9 @@ EXPOSE 8888
 
 CMD cd src/app && streamlit run main.py --server.port=8888 --server.address=0.0.0.0
 
-#jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
-#docker run `
+#CMD jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
+
+# docker run `
 #  -v C:\Users\cubix\PycharmProjects\rag\data:/app/data `
 #  -v C:\Users\cubix\PycharmProjects\rag\models:/app/models `
 #  -v C:\Users\cubix\PycharmProjects\rag\notebooks:/app/notebooks `
@@ -28,5 +29,6 @@ CMD cd src/app && streamlit run main.py --server.port=8888 --server.address=0.0.
 #  -p 8888:8888 `
 #  --gpus all `
 #  -it `
-#  --name test-rag `
-#  test-rag
+#  --name rag-app-jupter-2 `
+#  --rm --entrypoint /bin/bash `
+#  rag-app-jupyter

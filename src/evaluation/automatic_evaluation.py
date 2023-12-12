@@ -26,7 +26,8 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.callbacks.manager import CallbackManager
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-N_TESTS_FOR_QUESTION = 10
+N_TESTS_FOR_QUESTION = 5
+LLM_EVALUATOR = "gpt-3.5-turbo"
 
 SYSTEM_TEMPLATE = """Create an informative and comprehensive answer for a given question based solely on the given documents. You must only use information from the given documents.
 Use an unbiased and journalistic tone. Do not repeat text.
@@ -118,9 +119,8 @@ def generate_answers(llm, db, n_documents: int) -> tuple:
 def generate_scores(
     questions: list, reference_answers: list, answers: list, retrieved_contexts: list
 ) -> pd.DataFrame:
-    llm_evaluator = "gpt-4"
     score_calculator = RagScoresCalculator(
-        model=llm_evaluator,
+        model=LLM_EVALUATOR,
         answer_similarity_score=True,
         retrieval_precision=True,
         augmentation_precision=True,
@@ -264,13 +264,9 @@ if __name__ == "__main__":
 
         renamed_scores = rename_scores(scores)
         renamed_scores.to_json(
-            f"data/evaluation/automatic/LONG_{name}.json", orient="records"
+            f"data/evaluation/automatic/{name}.json", orient="records"
         )
 
-        short_scores = calculate_score_means(renamed_scores)
-        short_scores.to_json(
-            f"data/evaluation/automatic/SHORT_{name}.json", orient="records"
-        )
         print(
             f"--------------------------  {name} results saved successfully -------------------------- "
         )
