@@ -1,0 +1,8 @@
+Variable,local-local,local-openai,openai-local,openai-openai,overall
+Mental demand,0.1184,0.0019,0.0306,0.0089,0.0
+Physical demand,0.1414,0.0214,0.0524,0.2204,0.0004
+Temporal demand,0.5901,0.0975,0.0151,0.8934,0.195
+Performance,0.0773,0.0022,0.3199,0.0347,0.0
+Effort,0.5517,0.0137,0.1992,0.04,0.0006
+Frustration,0.6808,0.0114,0.044,0.0138,0.0001
+Actual performance,0.3466,0.0219,0.5995,0.0039,0.0009

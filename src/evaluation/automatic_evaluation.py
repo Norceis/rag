@@ -26,7 +26,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.callbacks.manager import CallbackManager
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-N_TESTS_FOR_QUESTION = 5
+N_TESTS_FOR_QUESTION = 1
 LLM_EVALUATOR = "gpt-3.5-turbo"
 
 SYSTEM_TEMPLATE = """Create an informative and comprehensive answer for a given question based solely on the given documents. You must only use information from the given documents.

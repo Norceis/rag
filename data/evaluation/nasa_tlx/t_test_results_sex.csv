@@ -1,0 +1,8 @@
+Variable,RAG base,RAG balanced,NONRAG base,NONRAG balanced
+Mental demand,0.2826,0.6251,0.0996,0.0339
+Physical demand,0.3965,0.6836,0.8067,0.9067
+Temporal demand,0.638,0.6605,0.0875,0.0315
+Performance,0.6697,0.1924,0.0476,0.4054
+Effort,0.5418,0.5661,0.1236,0.1158
+Frustration,0.8309,0.2882,0.8506,0.7164
+Actual performance,0.0536,0.5634,0.0395,0.3332
